@@ -10,23 +10,48 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(username: string, password: string): Promise<User> {
+  async signUp(
+    username: string,
+    password: string,
+  ): Promise<{ access_token: string; user: User }> {
     const user = await this.usersService.create(username, password);
-    // You can add additional logic here such as sending verification email, etc.
-    return user;
+
+    return this.setPayload(user);
   }
 
   async signIn(
     username: string,
     password: string,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ access_token: string; user: User }> {
     const user = await this.validateUser(username, password);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    return this.setPayload(user);
+  }
+
+  async verifyToken(token: string): Promise<User | null> {
+    try {
+      const decoded = this.jwtService.verify(token);
+      const user = await this.usersService.findOne(decoded.sub);
+      return user;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  private async setPayload(user: User) {
+    Object.defineProperties(user, {
+      password: {
+        enumerable: false,
+      },
+    });
+
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: await this.jwtService.signAsync(payload),
+      user,
     };
   }
 

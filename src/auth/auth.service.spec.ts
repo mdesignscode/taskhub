@@ -20,12 +20,15 @@ describe('AuthService', () => {
             create: jest.fn(),
             findByUsername: jest.fn(),
             comparePasswords: jest.fn(),
+            findById: jest.fn(),
+            findOne: jest.fn(),
           },
         },
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn(),
+            signAsync: jest.fn(),
+            verify: jest.fn(),
           },
         },
       ],
@@ -55,31 +58,59 @@ describe('AuthService', () => {
   });
 
   describe('signIn', () => {
-    it('should return a JWT token when sign in is successful', async () => {
+    it('should return access token when sign in is successful', async () => {
+      const username = 'testUser';
+      const password = 'password';
       const user: User = {
         id: 1,
         username: 'testUser',
-        password: 'password',
+        password: 'hashedPassword', // Assuming password is hashed in DB
       };
-      const token = 'fakeToken';
       jest.spyOn(usersService, 'findByUsername').mockResolvedValueOnce(user);
       jest.spyOn(usersService, 'comparePasswords').mockResolvedValueOnce(true);
-      jest.spyOn(jwtService, 'sign').mockReturnValueOnce(token);
+      jest
+        .spyOn(jwtService, 'signAsync')
+        .mockResolvedValueOnce('mockAccessToken');
 
-      const result = await service.signIn(user.username, user.password);
-      expect(result).toEqual(token);
+      const result = await service.signIn(username, password);
+      expect(result.access_token).toBe('mockAccessToken');
     });
 
-    it('should throw UnauthorizedException when invalid credentials are provided', async () => {
+    it('should throw UnauthorizedException if credentials are invalid', async () => {
       const username = 'testUser';
       const password = 'wrongPassword';
-      jest
-        .spyOn(usersService, 'findByUsername')
-        .mockResolvedValueOnce(undefined);
+      jest.spyOn(usersService, 'findByUsername').mockResolvedValueOnce(null);
 
       await expect(service.signIn(username, password)).rejects.toThrow(
         UnauthorizedException,
       );
+    });
+  });
+
+  describe('verifyToken', () => {
+    it('should return user if token is valid', async () => {
+      const validToken = 'validToken';
+      const decodedToken = { username: 'testUser', sub: 1 };
+      const user: User = {
+        id: 1,
+        username: 'testUser',
+        password: 'hashedPassword',
+      };
+      jest.spyOn(jwtService, 'verify').mockReturnValueOnce(decodedToken);
+      jest.spyOn(usersService, 'findOne').mockResolvedValueOnce(user);
+
+      const result = await service.verifyToken(validToken);
+      expect(result).toEqual(user);
+    });
+
+    it('should return null if token is invalid', async () => {
+      const invalidToken = 'invalidToken';
+      jest.spyOn(jwtService, 'verify').mockImplementation(() => {
+        throw new Error();
+      });
+
+      const result = await service.verifyToken(invalidToken);
+      expect(result).toBeNull();
     });
   });
 });

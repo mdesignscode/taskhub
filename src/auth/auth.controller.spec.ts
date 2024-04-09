@@ -7,6 +7,16 @@ describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
 
+  const username = 'testUser',
+    password = 'testPassword',
+    newUser = { id: 1, username, password },
+    mockResponse = {
+      cookie: jest.fn(),
+      json: jest.fn(),
+    } as any,
+    token = 'mockToken',
+    authorizedUser = { access_token: token, user: newUser };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
@@ -31,9 +41,6 @@ describe('AuthController', () => {
 
   describe('signUp', () => {
     it('should return a success message and user when sign up is successful', async () => {
-      const username = 'testUser';
-      const password = 'testPassword';
-      const newUser = { id: 1, username, password };
       jest.spyOn(authService, 'signUp').mockResolvedValueOnce(newUser);
 
       const result = await controller.signUp(username, password);
@@ -44,8 +51,6 @@ describe('AuthController', () => {
     });
 
     it('should throw BadRequestException when sign up fails', async () => {
-      const username = 'testUser';
-      const password = 'testPassword';
       jest
         .spyOn(authService, 'signUp')
         .mockRejectedValueOnce(new Error('User already exists'));
@@ -58,27 +63,31 @@ describe('AuthController', () => {
 
   describe('signIn', () => {
     it('should return a token when sign in is successful', async () => {
-      const username = 'testUser';
-      const password = 'testPassword';
-      const token = 'fakeToken';
-      jest
-        .spyOn(authService, 'signIn')
-        .mockResolvedValueOnce({ access_token: token });
+      jest.spyOn(authService, 'signIn').mockResolvedValueOnce(authorizedUser);
 
-      const result = await controller.signIn(username, password);
-      expect(result).toEqual({ token });
+      const result = await controller.signIn(username, password, mockResponse);
+      expect(result).toEqual(authorizedUser);
     });
 
     it('should throw UnauthorizedException when sign in fails', async () => {
-      const username = 'testUser';
-      const password = 'testPassword';
       jest
         .spyOn(authService, 'signIn')
         .mockRejectedValueOnce(new Error('Invalid credentials'));
 
-      await expect(controller.signIn(username, password)).rejects.toThrow(
+      await expect(
+        controller.signIn(username, password, {} as any),
+      ).rejects.toThrow(
         new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED),
       );
+    });
+
+    it('should set cookie and return user when sign in is successful', async () => {
+      jest.spyOn(authService, 'signIn').mockResolvedValueOnce(authorizedUser);
+
+      await controller.signIn(username, password, mockResponse);
+
+      expect(mockResponse.cookie).toHaveBeenCalledWith('jwt', token);
+      expect(mockResponse.json).toHaveBeenCalledWith(newUser);
     });
   });
 });

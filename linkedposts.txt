@@ -1,0 +1,50 @@
+Post 1 [4 April 2024]:
+
+🚀 Exciting News! 🚀
+
+I'm thrilled to announce that I'm starting a new project: a powerful task manager API built with cutting-edge technologies!
+
+🛠️ Tech Stack:
+Framework: Nest.js
+Language: TypeScript
+Database: PostgreSQL
+ORM: Drizzle ORM
+
+This project will be a showcase of my expertise in full-stack development, leveraging the robustness of Nest.js with its modular architecture and TypeScript's static typing for increased productivity and maintainability. PostgreSQL will handle our data storage needs, ensuring reliability and scalability, while Drizzle ORM simplifies database interactions and provides seamless integration with our Nest.js application.
+
+📝 Features:
+User Authentication and Authorization
+Task CRUD Operations
+Advanced Filtering and Sorting
+Task Assignment and Collaboration
+Notifications and Reminders
+Secure and Scalable Architecture
+
+I'm passionate about creating efficient and user-friendly solutions, and this project is no exception. Stay tuned for updates as I embark on this exciting journey!
+
+If you're interested in collaborating or learning more about this project, feel free to reach out! Let's innovate together. 💡
+
+#NestJS #TypeScript #PostgreSQL #DrizzleORM #FullStack #Developer
+
+
+
+Post 2 [6 April 2024]:
+
+🚀 Exciting Update! 🚀
+
+I'm thrilled to share some exciting developments regarding my latest project, the task manager API! Here's what's new:
+
+🛠️ Tech Stack Update:
+After careful consideration, I've decided to make some adjustments to our tech stack. We're now leveraging TypeORM, seamlessly integrated into Nest.js, to handle our database interactions. Additionally, I've successfully implemented JWT user authentication for enhanced security.
+
+🎯 Project Focus:
+In a quest to develop real problem-solving skills, I've consulted with a friend who's a teacher. As a result, our project will now focus on empowering educators to manage their tasks more efficiently. This shift in focus reflects our commitment to addressing real-world challenges.
+
+📝 Upcoming Features:
+
+    Implement Notebook: We're introducing a feature to store important content information, providing teachers with a centralized repository for crucial materials.
+    To-Do List Prioritization: Users will have the ability to prioritize tasks based on submission dates, times, and other relevant criteria, enabling efficient task management.
+
+Stay tuned for more updates as we continue to push the boundaries of innovation and problem-solving! 💡
+
+#NestJS #TypeORM #JWT #TaskManager #EducationTechnology

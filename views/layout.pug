@@ -1,0 +1,19 @@
+doctype html
+
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title #{title} | EduTask Manager
+
+    link(rel="stylesheet", href="/css/main.out.css")
+
+    block scripts
+
+  body(class="h-[100dvh]")
+    div(class="h-full flex flex-col")
+      if sharedLayout
+        <h1>Shared Layout</h1>
+
+      main(class="flex-1 grid")
+        block content

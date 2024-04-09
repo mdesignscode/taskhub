@@ -4,8 +4,10 @@ import {
   Body,
   HttpStatus,
   HttpException,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -15,10 +17,14 @@ export class AuthController {
   async signUp(
     @Body('username') username: string,
     @Body('password') password: string,
+    @Res() res: Response,
   ) {
     try {
-      const user = await this.authService.signUp(username, password);
-      return { message: 'User created successfully', user };
+      const { user, access_token } = await this.authService.signUp(
+        username,
+        password,
+      );
+      return res.cookie('jwt', access_token).json(user);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -28,10 +34,14 @@ export class AuthController {
   async signIn(
     @Body('username') username: string,
     @Body('password') password: string,
+    @Res() res: Response,
   ) {
     try {
-      const token = await this.authService.signIn(username, password);
-      return { token };
+      const { user, access_token } = await this.authService.signIn(
+        username,
+        password,
+      );
+      return res.cookie('jwt', access_token).json(user);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }

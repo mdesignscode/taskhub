@@ -1,0 +1,13 @@
+label(class="relative group hover:text-orange-500 transition-all duration-500")
+  span #{props.value}
+
+  div(class="flex gap-2 items-center flex-row-reverse")
+    input(id=props.value, type=props.type, class=inputStyles, placeholder=props.placeholder, required)
+
+    case props.value
+      when "Username"
+        include icons/handle
+      default
+        include icons/lock
+
+    span(aria-hidden="true", class="absolute -bottom-[2px] left-0 h-[2px] w-full bg-black peer-hover:bg-orange-500 peer-focus:bg-orange-500 transition-all duration-500")

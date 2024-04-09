@@ -29,11 +29,18 @@
     "@swc/cli": "^0.3.12",
     "@swc/core": "^1.4.12",
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/hbs": "^4.0.4",
     "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "express-handlebars": "^7.1.2",
+    "hbs": "^4.2.0",
     "joi": "^17.12.3",
     "pg": "^8.11.5",
+    "pug": "^3.0.2",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "tailwindcss": "^3.4.3",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
